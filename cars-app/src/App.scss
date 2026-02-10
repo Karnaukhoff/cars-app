@@ -93,3 +93,11 @@
     }
  }
 }
+.table-controls{
+      display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.table-p {
+  margin: 0;
+}

@@ -4,12 +4,6 @@ import AddingVehicle from "./components/AddingVehicle.tsx";
 import Vehicle from "./components/Vehicle.tsx";
 import EditingVehicle from "./components/EditingVehicle.tsx";
 
-// +Вывод списка машин (name, model, year, price)
-// +Создание машины (name, model, year, color, price)
-// +Редактирование машины (по полю name и price)
-// +Удаление машины
-// Сделать сортировку машин по year и price
-
 interface IVehicles {
   id: number;
   name: string;
@@ -20,9 +14,17 @@ interface IVehicles {
   latitude: number;
   longitude: number;
 }
+const sorts: string[] = [
+  "По умолчанию",
+  "По году: от наименьшего к наибольшему",
+  "По году: от наибольшего к наименьшему",
+  "По цене: от наименьшего к наибольшему",
+  "По цене: от наибольшего к наименьшему"
+];
 
 function App() {
   const [vehicles, setVehicles] = useState<IVehicles[]>([]);
+  const [sortType, setSortType] = useState<string>(sorts[0]);
   const [isChanging, setIsChanging] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -74,7 +76,7 @@ function App() {
       };
       setVehicles((prev) => [...prev, newVehicle]);
     } else alert("Необходимо завершить текущий процесс добавления машины");
-  }
+  };
 
   function confirmAddVechicle() {
     if (name && model && year && color && price) {
@@ -100,16 +102,16 @@ function App() {
       setColor("");
       setPrice(null);
     } else alert("Необходимо заполнить все поля");
-  }
+  };
 
   function deleteVehicle(id: number) {
     setVehicles((prev) => prev.filter((vehicle) => vehicle.id !== id));
-  }
+  };
 
   function initialEditingValues(vehicle: IVehicles) {
     setName(vehicle.name);
     setPrice(vehicle.price);
-  }
+  };
 
   function editVehicle() {
     if (name && price) {
@@ -133,10 +135,46 @@ function App() {
     } else {
       alert("Необходимо завершить текущий процесс редактирования машины");
     }
-  }
+  };
+
+  function getSortedVehicles(): IVehicles[] {
+    const sorted = [...vehicles];
+
+    switch (sortType) {
+      case "По году: от наименьшего к наибольшему":
+        sorted.sort((a, b) => Number(a.year) - Number(b.year));
+        break;
+      case "По году: от наибольшего к наименьшему":
+        sorted.sort((a, b) => Number(b.year) - Number(a.year));
+        break;
+      case "По цене: от наименьшего к наибольшему":
+        sorted.sort((a, b) => Number(a.price) - Number(b.price));
+        break;
+      case "По цене: от наибольшего к наименьшему":
+        sorted.sort((a, b) => Number(b.price) - Number(a.price));
+        break;
+      default:
+        break;
+    }
+
+    return sorted;
+  };
 
   return (
     <>
+      <div className="table-controls">
+        <p className="table-p">Сортировка: </p>
+        <select
+          value={sortType}
+          onChange={(e) => setSortType(e.target.value)}
+        >
+          {sorts.map((sort) => (
+            <option key={sort} value={sort}>
+              {sort}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="App">
         <table className="table">
           <thead className="table__head">
@@ -147,7 +185,7 @@ function App() {
             </tr>
           </thead>
           <tbody className="table__body">
-            {vehicles.map((vehicle) => {
+            {getSortedVehicles().map((vehicle) => {
               const isAddingVehicle =
                 isChanging && vehicle.id === vehicles.length;
               const isDropdownOpen = actionId === vehicle.id;
