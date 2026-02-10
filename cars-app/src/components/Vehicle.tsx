@@ -8,10 +8,13 @@ interface IProps {
     price: number;
     id: number;
     onDeleteVehicle: (id: number) => void;
+    onEditVehicle: () => void;
     onSendActionId: (id: number | null) => void;
+    isLastRow: boolean;
+    isDisabled: boolean;
 }
 
-function Vehicle ({name, model, year, color, price, id, onDeleteVehicle, onSendActionId}: IProps) {
+function Vehicle ({name, model, year, color, price, id, onDeleteVehicle, onEditVehicle, onSendActionId, isLastRow, isDisabled}: IProps) {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -44,13 +47,14 @@ function Vehicle ({name, model, year, color, price, id, onDeleteVehicle, onSendA
                     <button
                         className="table__action-btn"
                         onClick={() => setIsOpen(prev => !prev)}
+                        disabled={isDisabled}
                     >
                         ⋮
                     </button>
 
                     {isOpen && (
-                        <div className="action-menu__dropdown" ref={dropdownRef}>
-                            <button className="action-menu__dropdown_button">Редактировать</button>
+                        <div className={`action-menu__dropdown ${isLastRow ? 'action-menu__dropdown--up' : ''}`} ref={dropdownRef}>
+                            <button className="action-menu__dropdown_button" onClick={onEditVehicle}>Редактировать</button>
                             <button className="action-menu__dropdown_button" onClick={() => onDeleteVehicle(id)}>Удалить</button>
                         </div>
                     )}

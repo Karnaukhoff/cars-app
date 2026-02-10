@@ -74,6 +74,11 @@
     height: 70px;
     z-index: 100;
     overflow: hidden;
+    &--up {
+      top: auto;
+      bottom: 100%;
+      margin-bottom: 6px;
+    }
     &_button {
         padding: 10px 14px;
         background: none;

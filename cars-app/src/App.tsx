@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import "./App.scss";
 import AddingVehicle from "./components/AddingVehicle.tsx";
 import Vehicle from "./components/Vehicle.tsx";
+import EditingVehicle from "./components/EditingVehicle.tsx";
 
 // +Вывод списка машин (name, model, year, price)
 // +Создание машины (name, model, year, color, price)
-// Редактирование машины (по полю name и price)
+// +Редактирование машины (по полю name и price)
 // +Удаление машины
-// --поправить удаление последнего элемента
 // Сделать сортировку машин по year и price
 
 interface IVehicles {
@@ -24,11 +24,12 @@ interface IVehicles {
 function App() {
   const [vehicles, setVehicles] = useState<IVehicles[]>([]);
   const [isChanging, setIsChanging] = useState<boolean>(false);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [model, setModel] = useState<string>("");
-  const [year, setYear] = useState<number | undefined | null>();
+  const [year, setYear] = useState<number | null | undefined>();
   const [color, setColor] = useState<string>("");
-  const [price, setPrice] = useState<number | undefined | null>();
+  const [price, setPrice] = useState<number | null | undefined>();
   const [actionId, setActionId] = useState<number | null>(null);
   function handleVehicleActionId(id: number | null) {
     setActionId(id);
@@ -105,6 +106,35 @@ function App() {
     setVehicles((prev) => prev.filter((vehicle) => vehicle.id !== id));
   }
 
+  function initialEditingValues(vehicle: IVehicles) {
+    setName(vehicle.name);
+    setPrice(vehicle.price);
+  }
+
+  function editVehicle() {
+    if (name && price) {
+      const selected = vehicles.find((vehicle) => vehicle.id === actionId);
+      if (!selected) return;
+
+      const updatedVehicle: IVehicles = {
+        ...selected,
+        name: name || selected.name,
+        price: price,
+      };
+
+      setVehicles((prev) =>
+        prev.map((vehicle) =>
+          vehicle.id === actionId ? updatedVehicle : vehicle,
+        ),
+      );
+      setIsEditing(false);
+      setName("");
+      setPrice(null);
+    } else {
+      alert("Необходимо завершить текущий процесс редактирования машины");
+    }
+  }
+
   return (
     <>
       <div className="App">
@@ -121,6 +151,9 @@ function App() {
               const isAddingVehicle =
                 isChanging && vehicle.id === vehicles.length;
               const isDropdownOpen = actionId === vehicle.id;
+              const isLastRow =
+                vehicle.id === Math.max(...vehicles.map((v) => v.id));
+              const isEdittingId = isEditing && vehicle.id === actionId;
 
               return (
                 <tr
@@ -141,6 +174,17 @@ function App() {
                       onChangePrice={(e) => setPrice(Number(e.target.value))}
                       onConfirm={confirmAddVechicle}
                     />
+                  ) : isEdittingId ? (
+                    <EditingVehicle
+                      name={name}
+                      onChangeName={(e) => setName(e.target.value)}
+                      model={vehicle.model}
+                      price={price}
+                      year={vehicle.year}
+                      color={vehicle.color}
+                      onChangePrice={(e) => setPrice(Number(e.target.value))}
+                      onConfirm={editVehicle}
+                    />
                   ) : (
                     <Vehicle
                       name={vehicle.name}
@@ -150,7 +194,13 @@ function App() {
                       price={vehicle.price}
                       id={vehicle.id}
                       onDeleteVehicle={deleteVehicle}
+                      onEditVehicle={() => {
+                        setIsEditing(true);
+                        initialEditingValues(vehicle);
+                      }}
                       onSendActionId={handleVehicleActionId}
+                      isLastRow={isLastRow}
+                      isDisabled={isEditing || isChanging}
                     />
                   )}
                 </tr>
@@ -160,7 +210,11 @@ function App() {
           <tfoot>
             <tr>
               <td colSpan={headerNames.length}>
-                <button className="table__add-button" onClick={addVehicle}>
+                <button
+                  className="table__add-button"
+                  onClick={addVehicle}
+                  disabled={isEditing || isChanging}
+                >
                   +
                 </button>
               </td>
