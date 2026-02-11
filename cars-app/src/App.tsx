@@ -92,7 +92,7 @@ function App() {
       };
       setVehicles((prev) =>
         prev.map((vehicle) =>
-          vehicle.id !== vehicles.length ? vehicle : newVehicle,
+          vehicle.id !== Math.max(...vehicles.map((v) => v.id)) ? vehicle : newVehicle,
         ),
       );
       setIsChanging(false);
@@ -187,7 +187,7 @@ function App() {
           <tbody className="table__body">
             {getSortedVehicles().map((vehicle) => {
               const isAddingVehicle =
-                isChanging && vehicle.id === vehicles.length;
+                isChanging && vehicle.id === Math.max(...vehicles.map((v) => v.id));
               const isDropdownOpen = actionId === vehicle.id;
               const isLastRow =
                 vehicle.id === Math.max(...vehicles.map((v) => v.id));

@@ -1,70 +1,104 @@
-# Getting Started with Create React App
+# Vehicles SPA
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Тестовое задание: SPA-приложение для работы со списком автомобилей с использованием React и TypeScript.
 
-## Available Scripts
+## Описание
 
-In the project directory, you can run:
+Приложение получает данные с REST API и позволяет:
+- Просматривать список автомобилей
+- Сортировать автомобили по году и цене
+- Добавлять новый автомобиль
+- Редактировать автомобиль
+- Удалять автомобиль
 
-### `npm start`
+Данные загружаются с API:
+GET https://task.tspb.su/test-task/vehicles
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Все операции (добавление, редактирование, удаление) выполняются на клиентской стороне без отправки изменений на сервер.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Реализованный функционал
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 1. Получение данных
+При первом рендере приложения выполняется запрос к API с использованием `fetch`.  
+Полученные данные сохраняются в состоянии приложения.
 
-### `npm run build`
+### 2. Отображение списка
+Автомобили выводятся в виде таблицы со следующими полями:
+- Марка (name)
+- Модель (model)
+- Год выпуска (year)
+- Цвет (color)
+- Цена (price)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 3. Сортировка
+Реализована клиентская сортировка:
+- По году: от наименьшего к наибольшему
+- По году: от наибольшего к наименьшему
+- По цене: от наименьшего к наибольшему
+- По цене: от наибольшего к наименьшему
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Сортировка не изменяет исходный массив, а выполняется над его копией.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 4. Добавление автомобиля
+При нажатии на кнопку "+" появляется строка для ввода данных нового автомобиля.  
+После подтверждения(нажатие на кнопку "✓" в конце ряда) данные добавляются в состояние приложения.
 
-### `npm run eject`
+### 5. Редактирование автомобиля
+Доступно редактирование:
+- Названия (name)
+- Цены (price)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+После подтверждения изменения сохраняются в состоянии.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 6. Удаление автомобиля
+Удаление выполняется через кнопку действия в строке автомобиля.  
+Автомобиль удаляется из состояния приложения.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Используемые технологии
 
-## Learn More
+- React
+- TypeScript
+- SCSS
+- React Hooks (useState, useEffect)
+- REST API (fetch)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Установка и запуск
 
-### Code Splitting
+1. Установить зависимости:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+npm install
 
-### Analyzing the Bundle Size
+2. Запустить проект:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+npm run dev
 
-### Making a Progressive Web App
+или
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+npm start
 
-### Advanced Configuration
+(в зависимости от конфигурации проекта)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## Структура проекта
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+src/
+ ├── components/
+ │    ├── Vehicle.tsx
+ │    ├── AddingVehicle.tsx
+ │    ├── EditingVehicle.tsx
+ ├── App.tsx
+ ├── App.scss
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Дополнительно
+
+Проект реализован в рамках тестового задания.  
+Основной акцент сделан на корректную работу с состоянием, типизацию с использованием TypeScript и чистую архитектуру компонентов.
