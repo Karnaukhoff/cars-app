@@ -86,18 +86,6 @@ npm start
 
 ---
 
-## Структура проекта
-
-src/
- ├── components/
- │    ├── Vehicle.tsx
- │    ├── AddingVehicle.tsx
- │    ├── EditingVehicle.tsx
- ├── App.tsx
- ├── App.scss
-
----
-
 ## Дополнительно
 
 Проект реализован в рамках тестового задания.  
